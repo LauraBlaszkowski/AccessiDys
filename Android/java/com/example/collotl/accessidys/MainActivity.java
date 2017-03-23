@@ -2,9 +2,15 @@ package com.example.collotl.accessidys;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
+import android.os.AsyncTask;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -15,11 +21,31 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.impl.bootstrap.HttpServer;
+import org.w3c.dom.Document;
+import org.xml.sax.InputSource;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 public class MainActivity extends AppCompatActivity {
     private Spinner spUsers;
     private ArrayAdapter<String> adUsers;
+    private Document doc;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +82,78 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        TextView TVnbrUser= (TextView) findViewById(R.id.TVnbrUser);
+        TVnbrUser.setText("Il y a "+adUsers.getCount()+" utilisateurs différents.");
+
+
+        final TextView mTextView = (TextView) findViewById(R.id.textView7);
+
+        GetUsers getter =new GetUsers();
+        getter.execute("http://172.18.49.57:8080/v1/user");
+
+    }
+
+    private class GetUsers extends AsyncTask<String, Void, String> {
+        String serverResponse="";
+
+        @Override
+        protected String doInBackground(String... urls) {
+            System.setProperty("http.proxyHost","cache.univ-lille1.fr");
+            System.setProperty("http.proxyPort","3128");
+
+
+            HttpURLConnection urlConnection=null;
+            try {
+                URL url = new URL(urls[0]);
+                urlConnection = (HttpURLConnection) url.openConnection();
+                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
+                this.serverResponse=readStream(in);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }finally {
+                urlConnection.disconnect();
+            }
+            return "Executed";
+        }
+
+        private String readStream(InputStream in) {
+            BufferedReader reader=null;
+            StringBuilder total=new StringBuilder();
+            try {
+                 reader = new BufferedReader(new InputStreamReader(in));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    total.append(line).append('\n');
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }finally {
+                try {
+                    reader.close();
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+            return total.toString();
+
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            TextView txt = (TextView) findViewById(R.id.textView7);
+            txt.setText(result);
+        }
+
+        @Override
+        protected void onPreExecute() {}
+
+        @Override
+        protected void onProgressUpdate(Void... values) {}
     }
 }
+
+
 
 
 /*
