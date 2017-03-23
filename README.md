@@ -6,3 +6,8 @@ Nous nous sommes réparti les taches durant ce sprint, pour l'instant, le projet
 
 Sprint 3 :
 Durant ce sprint nous avons fait l'application android permettant à l'administrateur d'avoir une vue des différents compte utilisateurs. Nous avons continué à travailler sur le serveur REST et à comprendre plus en profondeur le fonctionnement de l'application.
+
+Sprint 4: 
+L'installaton en offline du git est ok ! On peut enfin commencer à modifier le JS. L'application mobile affichant les utilisateurs est ok , avec une nouvelle fonctionnalité de redirection vers une boite mail ! 
+
+
