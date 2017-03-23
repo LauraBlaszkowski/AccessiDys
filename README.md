@@ -9,5 +9,6 @@ Durant ce sprint nous avons fait l'application android permettant à l'administr
 
 Sprint 4: 
 L'installaton en offline du git est ok ! On peut enfin commencer à modifier le JS. L'application mobile affichant les utilisateurs est ok , avec une nouvelle fonctionnalité de redirection vers une boite mail ! 
+Pour le serveur, nous avons mis en place le squelette REST et commencé à travailler dessus mais nous avons beaucoup de problémes liés à l'environnement.
 
 
