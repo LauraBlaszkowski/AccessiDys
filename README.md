@@ -13,7 +13,7 @@ Pour le serveur, nous avons mis en place le squelette REST et commencé à trava
 Pour le javascript, nous nous sommes rendus compte que les navigateurs trop anciens ne fonctionnent pas avec la synthese vocale mais la plupart des navigateurs récents fonctionnent (tests effectués sur Safari, Google Chroome, Firefox, Internet Explorer, Chromium) et pas que Google Chrome. En revanche, aucun navigateurs sur les PC Linux de l'IUT ne fontionnent.
 
 Sprint 5:
-
+Nous avons regardé comment faire pour récupérer des informations du serveur REST depuis l'application android
 
 
 Sprint 6: Pour ce qui est de l'avancement des voix on a réussi à la changé en fonction de la langue du navigateur.
