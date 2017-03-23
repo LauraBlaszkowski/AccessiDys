@@ -58,22 +58,32 @@ cnedApp.service('speechService', function($window) {
      * @param connected : connected mode or not
      * @return if the mode is connected then returns the first French voice found. Otherwise returns the native voice.
      * */
-    this.getVoice = function(connected) {
+       this.getVoice = function (connected) {
         if ($window.speechSynthesis) {
             var voicesAvailable = $window.speechSynthesis.getVoices();
             for (var i = 0; i < voicesAvailable.length; i++) {
-                if (connected) {
-                    if (voicesAvailable[i].lang === 'fr-FR') {
-                        return voicesAvailable[i];
-                    }
-                } else {
-                    if (voicesAvailable[i].name === 'native') {
-                        return voicesAvailable[i];
+                    if (connected) {
+                        if (voicesAvailable[i].lang === 'fr-FR') {
+                            return voicesAvailable[i];
+                        }else if (voicesAvailable[i].lang === 'en-US') {
+                            return voicesAvailable[i];
+                        }else if (voicesAvailable[i].lang === 'es-ES') {
+                            return voicesAvailable[i];
+                        }else if (voicesAvailable[i].lang === 'it-IT') {
+                            return voicesAvailable[i];
+                        }else if (voicesAvailable[i].name === 'Google Deutsch') {
+                            return voicesAvailable[i];
+                        }
+                    } else {
+                        if (voicesAvailable[i].name === 'native') {
+                            return voicesAvailable[i];
+                        }
                     }
                 }
             }
         }
     };
+
 
     /**
      * Split the text if its size is larger than 200 characters.
