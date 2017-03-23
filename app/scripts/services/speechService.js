@@ -62,23 +62,16 @@ cnedApp.service('speechService', function($window) {
         if ($window.speechSynthesis) {
             var voicesAvailable = $window.speechSynthesis.getVoices();
             for (var i = 0; i < voicesAvailable.length; i++) {
-                if (connected) {
                     if (connected) {
                         if (voicesAvailable[i].lang === 'fr-FR') {
                             return voicesAvailable[i];
-                        }
-                        if (voicesAvailable[i].lang === 'en-US') {
+                        }else if (voicesAvailable[i].lang === 'en-US') {
                             return voicesAvailable[i];
-                        }
-                        if (voicesAvailable[i].lang === 'es-ES') {
+                        }else if (voicesAvailable[i].lang === 'es-ES') {
                             return voicesAvailable[i];
-
-                        }
-                        if (voicesAvailable[i].lang === 'it-IT') {
+                        }else if (voicesAvailable[i].lang === 'it-IT') {
                             return voicesAvailable[i];
-
-                        }
-                        if (voicesAvailable[i].name === 'Google Deutsch') {
+                        }else if (voicesAvailable[i].name === 'Google Deutsch') {
                             return voicesAvailable[i];
                         }
                     } else {
