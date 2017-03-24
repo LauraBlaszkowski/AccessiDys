@@ -49,20 +49,26 @@ import static com.example.collotl.accessidys.R.id.TVNomUser;
 
 public class MainActivity extends AppCompatActivity {
     private Spinner spUsers;
-    private ArrayAdapter<String> adUsers;
-    private Document doc;
     private GetUsers getter;
-    private TextView TVnbrUser;
+    private TextView TVNomUser;
+    private TextView TVPrenomUser;
+    private TextView TVMdpUser;
+    private TextView TVNbrProfUser;
+    private TextView TVEmailUser;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        TVNomUser= (TextView) findViewById(R.id.TVNomUser);
         spUsers= (Spinner) findViewById(R.id.spUsers);
-        adUsers=new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+        TVPrenomUser  = (TextView) findViewById(R.id.TVPrenomUser);
+        TVMdpUser = (TextView) findViewById(R.id.TVMdpUser);
+        TVNbrProfUser= (TextView) findViewById(R.id.TVNbrProfUser);
+        TVEmailUser = (TextView) findViewById(R.id.TVEmailUser);
 
-        final TextView TVEmailUser= (TextView) findViewById(R.id.TVEmailUser);
         TVEmailUser.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -72,53 +78,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        spUsers.setAdapter(adUsers);
-
-        final TextView TVNomUser= (TextView) findViewById(R.id.TVNomUser);
-        final TextView TVPrenomUser= (TextView) findViewById(R.id.TVPrenomUser);
-        final TextView TVMdpUser= (TextView) findViewById(R.id.TVMdpUser);
-        final TextView TVNbrProfUser= (TextView) findViewById(R.id.TVNbrProfUser);
-
         spUsers.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                JSONObject jsonOb=null;
-                try {
-                    jsonOb=(JSONObject)getter.getJsonArray().get(spUsers.getSelectedItemPosition());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                try {
-                    TVNomUser.setText(jsonOb.get("name").toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                try {
-                    TVPrenomUser.setText(jsonOb.get("name").toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                try {
-                    TVEmailUser.setText(jsonOb.get("email").toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                try {
-                    TVMdpUser.setText(jsonOb.get("password").toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-
-                try {
-                    TVNbrProfUser.setText(jsonOb.get("name").toString());
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                Log.v("User", jsonOb.toString());
+                affichageUser();
             }
 
             @Override
@@ -127,90 +90,55 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-         TVnbrUser= (TextView) findViewById(R.id.TVnbrUser);
-
         final TextView mTextView = (TextView) findViewById(R.id.textView7);
 
         getter =new GetUsers();
         getter.execute("http://172.18.49.57:8080/v1/user");
+        spUsers.setAdapter(getter.getAdUsers(this));
+        TextView TVnbrUser= (TextView) findViewById(R.id.tvUsers);
+        TVnbrUser.setText("Il y a "+spUsers.getAdapter().getCount()+" utilisateurs différents.");
     }
 
-    private class GetUsers extends AsyncTask<String, Void, String> {
-    private JSONArray json=null;
-
-        @Override
-        protected String doInBackground(String... urls) {
-            System.setProperty("http.proxyHost","cache.univ-lille1.fr");
-            System.setProperty("http.proxyPort","3128");
-
-            HttpURLConnection urlConnection=null;
-            try {
-                URL url = new URL(urls[0]);
-                urlConnection = (HttpURLConnection) url.openConnection();
-                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-                return readStream(in);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }finally {
-                urlConnection.disconnect();
-            }
-            return "Fail";
+    private void affichageUser(){
+        JSONObject jsonOb=null;
+        try {
+            jsonOb=(JSONObject)getter.getJsonArray().get(spUsers.getSelectedItemPosition());
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
 
-        private String readStream(InputStream in) {
-            BufferedReader reader=null;
-            StringBuilder total=new StringBuilder();
-            try {
-                 reader = new BufferedReader(new InputStreamReader(in));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    total.append(line).append('\n');
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }finally {
-                try {
-                    reader.close();
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-            return total.toString();
-
+        try {
+            TVNomUser.setText(jsonOb.get("name").toString());
+        } catch (JSONException e) {
+            TVNomUser.setText("-");
         }
 
-        @Override
-        protected void onPostExecute(String result) {
-            json=null;
-            try {
-                json = new JSONArray(result);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-
-            ArrayList<String> strList=new ArrayList<>();
-            for(int i = 0; i < json.length(); i++){
-                strList.add("Utilisateur "+i);
-            }
-            adUsers.addAll(strList);
-            TVnbrUser.setText("Il y a "+adUsers.getCount()+" utilisateurs différents.");
-
+        try {
+            TVPrenomUser.setText(jsonOb.get("name").toString());
+        } catch (JSONException e) {
+            TVPrenomUser.setText("-");
         }
 
-        JSONArray getJsonArray(){
-            return json;
+        try {
+            TVEmailUser.setText(jsonOb.get("email").toString());
+        } catch (JSONException e) {
+            TVEmailUser.setText("-");
         }
 
-        @Override
-        protected void onPreExecute() {}
+        try {
+            TVMdpUser.setText(jsonOb.get("password").toString());
+        } catch (JSONException e) {
+            TVMdpUser.setText("-");
+        }
 
-        @Override
-        protected void onProgressUpdate(Void... values) {}
+        try {
+            TVNbrProfUser.setText(jsonOb.get("name").toString());
+        } catch (JSONException e) {
+            TVNbrProfUser.setText("-");
+        }
+        Log.v("User", jsonOb.toString());
     }
 }
-
-
-
 
 /*
   WebView browser = (WebView) findViewById(R.id.webview);
