@@ -12,40 +12,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.impl.bootstrap.HttpServer;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Document;
-import org.xml.sax.InputSource;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import static com.example.collotl.accessidys.R.id.TVNomUser;
 
 public class MainActivity extends AppCompatActivity {
     private Spinner spUsers;
@@ -55,7 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView TVMdpUser;
     private TextView TVNbrProfUser;
     private TextView TVEmailUser;
-
+    private JSONArray jsonA;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         spUsers.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                affichageUser();
+                //affichageUser();
             }
 
             @Override
@@ -92,17 +68,32 @@ public class MainActivity extends AppCompatActivity {
 
         final TextView mTextView = (TextView) findViewById(R.id.textView7);
 
-        getter =new GetUsers();
-        getter.execute("http://172.18.49.57:8080/v1/user");
-        spUsers.setAdapter(getter.getAdUsers(this));
+        getter =new GetUsers(this);
+        getter.getUsers(this);
+    }
+
+    public void setUI(JSONArray json){
+        this.jsonA=json;
+        spUsers.setAdapter(this.setArray());
         TextView TVnbrUser= (TextView) findViewById(R.id.tvUsers);
         TVnbrUser.setText("Il y a "+spUsers.getAdapter().getCount()+" utilisateurs différents.");
+        this.affichageUser();
+    }
+
+    private ArrayAdapter setArray(){
+        ArrayAdapter<String> adUsers=new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);;
+        ArrayList<String> strList=new ArrayList<>();
+        for(int i = 0; i < this.jsonA.length(); i++){
+            strList.add("Utilisateur "+(i+1));
+        }
+        adUsers.addAll(strList);
+        return adUsers;
     }
 
     private void affichageUser(){
         JSONObject jsonOb=null;
         try {
-            jsonOb=(JSONObject)getter.getJsonArray().get(spUsers.getSelectedItemPosition());
+            jsonOb=(JSONObject)this.jsonA.get(spUsers.getSelectedItemPosition());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -114,7 +105,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         try {
-            TVPrenomUser.setText(jsonOb.get("name").toString());
+            TVPrenomUser.setText(jsonOb.get("firstname").toString());
         } catch (JSONException e) {
             TVPrenomUser.setText("-");
         }
@@ -132,12 +123,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         try {
-            TVNbrProfUser.setText(jsonOb.get("name").toString());
+            TVNbrProfUser.setText(jsonOb.get("nbrprof").toString());
         } catch (JSONException e) {
             TVNbrProfUser.setText("-");
         }
         Log.v("User", jsonOb.toString());
     }
+
 }
 
 /*

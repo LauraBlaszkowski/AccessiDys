@@ -1,7 +1,16 @@
 package com.example.collotl.accessidys;
 
 import android.os.AsyncTask;
+import android.util.Log;
 import android.widget.ArrayAdapter;
+import android.widget.TextView;
+
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
 
@@ -17,80 +26,43 @@ import java.util.ArrayList;
  * Created by collotl on 24/03/17.
  */
 
-public class GetUsers extends AsyncTask<String, Void, String> {
-        private JSONArray json=null;
-        private ArrayAdapter<String> adUsers;
+public class GetUsers {
+    private android.content.Context context;
+    private String [] res=new String[1];
 
-        @Override
-        protected String doInBackground(String... urls) {
-            System.setProperty("http.proxyHost","cache.univ-lille1.fr");
-            System.setProperty("http.proxyPort","3128");
+    GetUsers(android.content.Context context){
+        this.context=context;
+    }
 
-            HttpURLConnection urlConnection=null;
-            try {
-                URL url = new URL(urls[0]);
-                urlConnection = (HttpURLConnection) url.openConnection();
-                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-                return readStream(in);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }finally {
-                urlConnection.disconnect();
+    public void getUsers(MainActivity main){
+        this.request(main);
+    }
+
+    private void request(final MainActivity main){
+        RequestQueue queue = Volley.newRequestQueue(context);
+        System.setProperty("http.proxyHost","cache.univ-lille1.fr");
+        System.setProperty("http.proxyPort","3128");
+        String url="http://172.18.49.57:8080/v1/user";
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        res[0]=response;
+                        Log.v("getUsers Success",res[0]);
+                        try {
+                            main.setUI(new JSONArray(res[0]));
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                Log.v("getUsers ERROR",error.getMessage());
             }
-            return "Fail";
-        }
-
-        private String readStream(InputStream in) {
-            BufferedReader reader=null;
-            StringBuilder total=new StringBuilder();
-            try {
-                reader = new BufferedReader(new InputStreamReader(in));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    total.append(line).append('\n');
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }finally {
-                try {
-                    reader.close();
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-            return total.toString();
-
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            json=null;
-            try {
-                json = new JSONArray(result);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-
-            ArrayList<String> strList=new ArrayList<>();
-            for(int i = 0; i < json.length(); i++){
-                strList.add("Utilisateur "+(i+1));
-            }
-            adUsers.addAll(strList);
-        }
-
-        JSONArray getJsonArray(){
-            return json;
-        }
-
-        public ArrayAdapter<String> getAdUsers(android.content.Context context) {
-            if(adUsers ==null)
-                adUsers =new ArrayAdapter<String>(context, android.R.layout.simple_spinner_item);
-            return adUsers;
-        }
-
-        @Override
-        protected void onPreExecute() {}
-
-        @Override
-        protected void onProgressUpdate(Void... values) {}
+        });
+        queue.add(stringRequest);
+    }
 }
