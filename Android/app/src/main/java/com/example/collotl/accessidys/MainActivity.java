@@ -23,6 +23,9 @@ import android.widget.Toast;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.impl.bootstrap.HttpServer;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 
@@ -42,10 +45,14 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import static com.example.collotl.accessidys.R.id.TVNomUser;
+
 public class MainActivity extends AppCompatActivity {
     private Spinner spUsers;
     private ArrayAdapter<String> adUsers;
     private Document doc;
+    private GetUsers getter;
+    private TextView TVnbrUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,16 +72,53 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        ArrayList<String> strList=new ArrayList<>();
-        for(int i = 0; i < 10; i++){
-            strList.add("user"+i);
-        }
-        adUsers.addAll(strList);
         spUsers.setAdapter(adUsers);
+
+        final TextView TVNomUser= (TextView) findViewById(R.id.TVNomUser);
+        final TextView TVPrenomUser= (TextView) findViewById(R.id.TVPrenomUser);
+        final TextView TVMdpUser= (TextView) findViewById(R.id.TVMdpUser);
+        final TextView TVNbrProfUser= (TextView) findViewById(R.id.TVNbrProfUser);
+
         spUsers.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                TVEmailUser.setText(spUsers.getSelectedItem().toString()+"@gmail.com");
+                JSONObject jsonOb=null;
+                try {
+                    jsonOb=(JSONObject)getter.getJsonArray().get(spUsers.getSelectedItemPosition());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    TVNomUser.setText(jsonOb.get("name").toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    TVPrenomUser.setText(jsonOb.get("name").toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    TVEmailUser.setText(jsonOb.get("email").toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    TVMdpUser.setText(jsonOb.get("password").toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    TVNbrProfUser.setText(jsonOb.get("name").toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                Log.v("User", jsonOb.toString());
             }
 
             @Override
@@ -83,38 +127,34 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        TextView TVnbrUser= (TextView) findViewById(R.id.TVnbrUser);
-        TVnbrUser.setText("Il y a "+adUsers.getCount()+" utilisateurs différents.");
-
+         TVnbrUser= (TextView) findViewById(R.id.TVnbrUser);
 
         final TextView mTextView = (TextView) findViewById(R.id.textView7);
 
-        GetUsers getter =new GetUsers();
+        getter =new GetUsers();
         getter.execute("http://172.18.49.57:8080/v1/user");
-
     }
 
     private class GetUsers extends AsyncTask<String, Void, String> {
-        String serverResponse="";
+    private JSONArray json=null;
 
         @Override
         protected String doInBackground(String... urls) {
             System.setProperty("http.proxyHost","cache.univ-lille1.fr");
             System.setProperty("http.proxyPort","3128");
 
-
             HttpURLConnection urlConnection=null;
             try {
                 URL url = new URL(urls[0]);
                 urlConnection = (HttpURLConnection) url.openConnection();
                 InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-                this.serverResponse=readStream(in);
+                return readStream(in);
             } catch (Exception e) {
                 e.printStackTrace();
             }finally {
                 urlConnection.disconnect();
             }
-            return "Executed";
+            return "Fail";
         }
 
         private String readStream(InputStream in) {
@@ -141,8 +181,24 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(String result) {
-            TextView txt = (TextView) findViewById(R.id.textView7);
-            txt.setText(result);
+            json=null;
+            try {
+                json = new JSONArray(result);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+            ArrayList<String> strList=new ArrayList<>();
+            for(int i = 0; i < json.length(); i++){
+                strList.add("Utilisateur "+i);
+            }
+            adUsers.addAll(strList);
+            TVnbrUser.setText("Il y a "+adUsers.getCount()+" utilisateurs différents.");
+
+        }
+
+        JSONArray getJsonArray(){
+            return json;
         }
 
         @Override
