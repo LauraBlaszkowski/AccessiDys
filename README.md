@@ -17,3 +17,6 @@ Nous avons regardé comment faire pour récupérer des informations du serveur R
 
 
 Sprint 6: Pour ce qui est de l'avancement des voix on a réussi à la changé en fonction de la langue du navigateur.
+Avancement sur la compréhension du fonctionnement de REST en android.
+
+Sprint 7: L'application Android arrive à récupérer le JSON du serveur REST.
