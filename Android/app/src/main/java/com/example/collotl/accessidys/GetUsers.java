@@ -14,6 +14,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -31,9 +32,8 @@ import java.util.Map;
 
 public class GetUsers {
     private android.content.Context context;
-    private String urlServer="http://172.18.49.57:8080/v1/user";
+    private String urlServer="http://172.18.49.57:8080/v1/";
     private RequestQueue queue;
-
 
     GetUsers(android.content.Context context){
         this.context=context;
@@ -42,14 +42,16 @@ public class GetUsers {
         System.setProperty("http.proxyPort","3128");
     }
 
-    public void getUsers(final MainActivity main){
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, urlServer,
+    public void getUsers(final GetUsers getter,final MainActivity main){
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, urlServer+"user",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         Log.v("getUsers Success",response);
                         try {
-                            main.setUI(new JSONArray(response));
+                            JSONArray js=new JSONArray(response);
+                            main.setJsonA(js);
+                            getter.getProfilsUser(main,(Integer)((JSONObject)js.get(0)).get("id"));
                         }catch (Exception e){
                             e.printStackTrace();
                         }
@@ -66,12 +68,12 @@ public class GetUsers {
     }
 
     public void delUsers(final GetUsers getter, final MainActivity main, int id){
-        StringRequest stringRequest = new StringRequest(Request.Method.DELETE, urlServer+"/"+id,
+        StringRequest stringRequest = new StringRequest(Request.Method.DELETE, urlServer+"user/"+id,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         Log.v("delUsers Success",response);
-                        getter.getUsers(main);
+                        getter.getUsers(getter,main);
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -96,5 +98,26 @@ public class GetUsers {
         queue.add(stringRequest);
     }
 
-    //content-type: application/json
+    public void getProfilsUser(final MainActivity main,int id){
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, urlServer+"profil/"+id,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.v("getProfilsUser Success",response);
+                        try {
+                            main.setUI(new JSONArray(response));
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                if(error.getMessage()!=null)
+                    Log.v("getProfilsUser ERROR",error.getMessage());
+            }
+        });
+        queue.add(stringRequest);
+    }
 }

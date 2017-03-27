@@ -32,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView TVNbrProfUser;
     private TextView TVEmailUser;
     private JSONArray jsonA;
+    private boolean first=true;
+    private MainActivity main=this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +59,12 @@ public class MainActivity extends AppCompatActivity {
         spUsers.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                affichageUser();
+                try {
+                    int idUser=(Integer)((JSONObject)jsonA.get(spUsers.getSelectedItemPosition())).get("id");
+                    getter.getProfilsUser(main,idUser);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
             @Override
@@ -69,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
         final TextView mTextView = (TextView) findViewById(R.id.textView7);
 
         getter =new GetUsers(this);
-        getter.getUsers(this);
+        getter.getUsers(getter,this);
     }
 
     public void doDelUser(View view){
@@ -87,18 +94,18 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void setUI(JSONArray json){
-        this.jsonA=json;
-        spUsers.setAdapter(this.setArray());
-        TextView TVnbrUser= (TextView) findViewById(R.id.tvUsers);
-        TVnbrUser.setText("Il y a "+spUsers.getAdapter().getCount()+" utilisateurs différents.");
+    public void setUI(JSONArray jsonProfilsUser){
+        if(first) {
+            spUsers.setAdapter(this.setArray());
+            TextView TVnbrUser = (TextView) findViewById(R.id.tvUsers);
+            TVnbrUser.setText("Il y a " + spUsers.getAdapter().getCount() + " utilisateurs différents.");
+            first=false;
+        }
         if(jsonA.length()>0)
-            this.affichageUser();
+            this.affichageUser(jsonProfilsUser);
         else
             this.affichageUserVide();
     }
-
-
 
     private ArrayAdapter setArray(){
         ArrayAdapter<String> adUsers=new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);;
@@ -120,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
         return adUsers;
     }
 
-    private void affichageUser(){
+    private void affichageUser(JSONArray jsonProfilsUser){
         JSONObject jsonOb=null;
             try {
             jsonOb=(JSONObject)this.jsonA.get(spUsers.getSelectedItemPosition());
@@ -152,11 +159,8 @@ public class MainActivity extends AppCompatActivity {
             TVMdpUser.setText("-");
         }
 
-        try {
-            TVNbrProfUser.setText(jsonOb.get("nbrprof").toString());
-        } catch (JSONException e) {
-            TVNbrProfUser.setText("-");
-        }
+        TVNbrProfUser.setText(""+jsonProfilsUser.length());
+
         Log.v("User", jsonOb.toString());
     }
 
@@ -168,7 +172,9 @@ public class MainActivity extends AppCompatActivity {
         TVNbrProfUser.setText("-");
     }
 
-
+    public void setJsonA(JSONArray jsonA) {
+        this.jsonA = jsonA;
+    }
 }
 
 /*
