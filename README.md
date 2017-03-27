@@ -26,3 +26,7 @@ Sprint 8 : Il est difficile de comprendre le code et nous avons préféré nous 
 Sprint 9 : Le serveur n'autorise pas la création d'un utilisateur ayant rentré une adresse email invalide. 
 La synthese vocale fonctionne désormais pour toutes les langues possibles pour le navigateur. Elle est pour l'instant paramétrée selon la langue du navigateur.
 L'application android utilise maintenant la librairie volley pour faire les requetes au serveur REST
+
+Sprint 10 : Compréhension des requetes delete avec volley. Pour le serveur REST, nous avons commencé à implémenter les styles, ainsi que leurs ajouts dans la BDD.
+
+Sprint 11 : L'application android arrive à supprimer des utilisateurs et l'affichage prend en compte le cas du serveur sans utilisateur. Nous avons finis d'impémenter les styles dans le serveur REST et la BDD.
