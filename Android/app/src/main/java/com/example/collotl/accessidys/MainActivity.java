@@ -11,9 +11,12 @@ import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -32,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
     private TextView TVNbrProfUser;
     private TextView TVEmailUser;
     private JSONArray jsonA;
-    private boolean first=true;
     private MainActivity main=this;
 
     @Override
@@ -59,18 +61,17 @@ public class MainActivity extends AppCompatActivity {
         spUsers.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                try {
-                    int idUser=(Integer)((JSONObject)jsonA.get(spUsers.getSelectedItemPosition())).get("id");
-                    getter.getProfilsUser(main,idUser);
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if (jsonA != null && jsonA.length() > 0) {
+                    try {
+                        int idUser = (Integer) ((JSONObject) jsonA.get(spUsers.getSelectedItemPosition())).get("id");
+                        getter.getProfilsUser(main, idUser,false);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
+            public void onNothingSelected(AdapterView<?> parent) {}
         });
 
         final TextView mTextView = (TextView) findViewById(R.id.textView7);
@@ -80,6 +81,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void doDelUser(View view){
+        PopUpButton pop=new PopUpButton();
+
         JSONObject jsonOb=null;
         try {
             jsonOb=(JSONObject)this.jsonA.get(spUsers.getSelectedItemPosition());
@@ -87,20 +90,17 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        try {
-            getter.delUsers(getter,this,(Integer)jsonOb.get("id"));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        pop.set(getter,jsonOb, this);
+        pop.show(getFragmentManager(),"del user");
     }
 
-    public void setUI(JSONArray jsonProfilsUser){
-        if(first) {
+    public void setUI(JSONArray jsonProfilsUser, boolean general){
+        if(general)
             spUsers.setAdapter(this.setArray());
+
             TextView TVnbrUser = (TextView) findViewById(R.id.tvUsers);
-            TVnbrUser.setText("Il y a " + spUsers.getAdapter().getCount() + " utilisateurs différents.");
-            first=false;
-        }
+            TVnbrUser.setText("Il y a " + jsonA.length() + " utilisateurs différents.");
+
         if(jsonA.length()>0)
             this.affichageUser(jsonProfilsUser);
         else

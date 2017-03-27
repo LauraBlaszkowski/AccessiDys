@@ -51,7 +51,7 @@ public class GetUsers {
                         try {
                             JSONArray js=new JSONArray(response);
                             main.setJsonA(js);
-                            getter.getProfilsUser(main,(Integer)((JSONObject)js.get(0)).get("id"));
+                            getter.getProfilsUser(main,(Integer)((JSONObject)js.get(0)).get("id"),true);
                         }catch (Exception e){
                             e.printStackTrace();
                         }
@@ -98,14 +98,14 @@ public class GetUsers {
         queue.add(stringRequest);
     }
 
-    public void getProfilsUser(final MainActivity main,int id){
+    public void getProfilsUser(final MainActivity main,int id, final boolean general){
         StringRequest stringRequest = new StringRequest(Request.Method.GET, urlServer+"profil/"+id,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         Log.v("getProfilsUser Success",response);
                         try {
-                            main.setUI(new JSONArray(response));
+                            main.setUI(new JSONArray(response),general);
                         }catch (Exception e){
                             e.printStackTrace();
                         }
