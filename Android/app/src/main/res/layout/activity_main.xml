@@ -12,8 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="26dp"
-        android:id="@+id/spUsers"
-        android:layout_below="@+id/tvUsers"
+        android:id="@+id/spProfs"
+        android:layout_below="@+id/tvProf"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -22,8 +22,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="22dp"
-        android:id="@+id/tvUsers"
-        android:layout_below="@+id/TVnbrUser"
+        android:id="@+id/tvProf"
+        android:layout_below="@+id/TVnbrProf"
         android:layout_centerHorizontal="true" />
 
     <TextView
@@ -67,7 +67,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="19dp"
         android:id="@+id/textView3"
-        android:layout_below="@+id/spUsers"
+        android:layout_below="@+id/spProfs"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -84,7 +84,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/TVnbrUser"
+        android:id="@+id/TVnbrProf"
         android:text="            "
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
@@ -131,10 +131,19 @@
         android:text="Supprimer l'utilisateur"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/BTdelete"
+        android:onClick="doDelUser"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true" />
+
+    <Button
+        android:text="Afficher ces profils"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/btShowProf"
         android:layout_below="@+id/TVNbrProfUser"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginTop="40dp"
-        android:id="@+id/BTdelete"
-        android:onClick="doDelUser" />
+        android:layout_marginTop="34dp" />
 </RelativeLayout>

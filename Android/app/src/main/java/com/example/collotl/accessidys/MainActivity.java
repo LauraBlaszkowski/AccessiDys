@@ -1,22 +1,14 @@
 package com.example.collotl.accessidys;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
-import android.os.AsyncTask;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
-import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.PopupWindow;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -35,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView TVNbrProfUser;
     private TextView TVEmailUser;
     private JSONArray jsonA;
+    private JSONArray jsonProf;
     private MainActivity main=this;
 
     @Override
@@ -43,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         TVNomUser= (TextView) findViewById(R.id.TVNomUser);
-        spUsers= (Spinner) findViewById(R.id.spUsers);
+        spUsers= (Spinner) findViewById(R.id.spProfs);
         TVPrenomUser  = (TextView) findViewById(R.id.TVPrenomUser);
         TVMdpUser = (TextView) findViewById(R.id.TVMdpUser);
         TVNbrProfUser= (TextView) findViewById(R.id.TVNbrProfUser);
@@ -74,7 +67,15 @@ public class MainActivity extends AppCompatActivity {
             public void onNothingSelected(AdapterView<?> parent) {}
         });
 
-        final TextView mTextView = (TextView) findViewById(R.id.textView7);
+        Button orderButton = (Button)findViewById(R.id.btShowProf);
+        orderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, Profils.class);
+                intent.putExtra("json",jsonProf.toString());
+                startActivity(intent);
+            }
+        });
 
         getter =new GetUsers(this);
         getter.getUsers(getter,this);
@@ -98,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         if(general)
             spUsers.setAdapter(this.setArray());
 
-            TextView TVnbrUser = (TextView) findViewById(R.id.tvUsers);
+            TextView TVnbrUser = (TextView) findViewById(R.id.tvProf);
             TVnbrUser.setText("Il y a " + jsonA.length() + " utilisateurs différents.");
 
         if(jsonA.length()>0)
@@ -128,6 +129,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void affichageUser(JSONArray jsonProfilsUser){
+        this.jsonProf=jsonProfilsUser;
+
         JSONObject jsonOb=null;
             try {
             jsonOb=(JSONObject)this.jsonA.get(spUsers.getSelectedItemPosition());
