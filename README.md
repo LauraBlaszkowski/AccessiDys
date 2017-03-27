@@ -23,4 +23,5 @@ Sprint 7: L'application Android arrive à récupérer le JSON du serveur REST. N
 
 Sprint 8 : Il est difficile de comprendre le code et nous avons préféré nous concentrer sur le serveur que la colloration des des mots par syllabes. Nous avons réussi à créer des profils sur le serveur et ne pas autoriser la création d'utilisateur avec une adresse email déjà présente dans la base de données. L'application Android a adapté l'affichage pour la récupération des données du serveur. La langue de la synthèse vocale s'adapte maintenant à la langue du navigateur.
 
-Sprint 9 : Le serveur n'autorise pas la création d'un utilisateur ayant rentré une adresse email invalide.
+Sprint 9 : Le serveur n'autorise pas la création d'un utilisateur ayant rentré une adresse email invalide. 
+La synthese vocale fonctionne désormais pour toutes les langues possibles pour le navigateur. Elle est pour l'instant paramétrée selon la langue du navigateur.
