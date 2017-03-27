@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         spUsers.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                //affichageUser();
+                affichageUser();
             }
 
             @Override
@@ -72,19 +72,49 @@ public class MainActivity extends AppCompatActivity {
         getter.getUsers(this);
     }
 
+    public void doDelUser(View view){
+        JSONObject jsonOb=null;
+        try {
+            jsonOb=(JSONObject)this.jsonA.get(spUsers.getSelectedItemPosition());
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            getter.delUsers(getter,this,(Integer)jsonOb.get("id"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void setUI(JSONArray json){
         this.jsonA=json;
         spUsers.setAdapter(this.setArray());
         TextView TVnbrUser= (TextView) findViewById(R.id.tvUsers);
         TVnbrUser.setText("Il y a "+spUsers.getAdapter().getCount()+" utilisateurs différents.");
-        this.affichageUser();
+        if(jsonA.length()>0)
+            this.affichageUser();
+        else
+            this.affichageUserVide();
     }
+
+
 
     private ArrayAdapter setArray(){
         ArrayAdapter<String> adUsers=new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);;
         ArrayList<String> strList=new ArrayList<>();
         for(int i = 0; i < this.jsonA.length(); i++){
-            strList.add("Utilisateur "+(i+1));
+            JSONObject jsonOb=null;
+            try {
+                jsonOb=(JSONObject)this.jsonA.get(i);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            try {
+                strList.add("Utilisateur "+jsonOb.get("id"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
         adUsers.addAll(strList);
         return adUsers;
@@ -92,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void affichageUser(){
         JSONObject jsonOb=null;
-        try {
+            try {
             jsonOb=(JSONObject)this.jsonA.get(spUsers.getSelectedItemPosition());
         } catch (JSONException e) {
             e.printStackTrace();
@@ -129,6 +159,15 @@ public class MainActivity extends AppCompatActivity {
         }
         Log.v("User", jsonOb.toString());
     }
+
+    private void affichageUserVide(){
+        TVNomUser.setText("-");
+        TVPrenomUser.setText("-");
+        TVEmailUser.setText("-");
+        TVMdpUser.setText("-");
+        TVNbrProfUser.setText("-");
+    }
+
 
 }
 

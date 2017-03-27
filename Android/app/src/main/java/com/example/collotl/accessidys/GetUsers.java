@@ -5,6 +5,7 @@ import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -21,6 +22,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by collotl on 24/03/17.
@@ -28,30 +31,25 @@ import java.util.ArrayList;
 
 public class GetUsers {
     private android.content.Context context;
-    private String [] res=new String[1];
+    private String urlServer="http://172.18.49.57:8080/v1/user";
+    private RequestQueue queue;
+
 
     GetUsers(android.content.Context context){
         this.context=context;
-    }
-
-    public void getUsers(MainActivity main){
-        this.request(main);
-    }
-
-    private void request(final MainActivity main){
-        RequestQueue queue = Volley.newRequestQueue(context);
+        this.queue= Volley.newRequestQueue(context);
         System.setProperty("http.proxyHost","cache.univ-lille1.fr");
         System.setProperty("http.proxyPort","3128");
-        String url="http://172.18.49.57:8080/v1/user";
+    }
 
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+    public void getUsers(final MainActivity main){
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, urlServer,
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        res[0]=response;
-                        Log.v("getUsers Success",res[0]);
+                        Log.v("getUsers Success",response);
                         try {
-                            main.setUI(new JSONArray(res[0]));
+                            main.setUI(new JSONArray(response));
                         }catch (Exception e){
                             e.printStackTrace();
                         }
@@ -60,9 +58,43 @@ public class GetUsers {
             @Override
             public void onErrorResponse(VolleyError error) {
                 error.printStackTrace();
-                Log.v("getUsers ERROR",error.getMessage());
+                if(error.getMessage()!=null)
+                    Log.v("getUsers ERROR",error.getMessage());
             }
         });
         queue.add(stringRequest);
     }
+
+    public void delUsers(final GetUsers getter, final MainActivity main, int id){
+        StringRequest stringRequest = new StringRequest(Request.Method.DELETE, urlServer+"/"+id,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.v("delUsers Success",response);
+                        getter.getUsers(main);
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                error.printStackTrace();
+                if(error.getMessage()!=null)
+                    Log.v("delUsers ERROR",error.getMessage());
+            }
+        }){
+            @Override
+            public String getBodyContentType()
+            {
+                return "application/json; charset=utf-8";
+            }
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> header = new HashMap<String, String>();
+                header.put("Content-Type", "application/json; charset=utf-8");
+                return header;
+            }
+        };
+        queue.add(stringRequest);
+    }
+
+    //content-type: application/json
 }
