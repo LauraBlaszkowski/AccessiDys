@@ -30,3 +30,7 @@ L'application android utilise maintenant la librairie volley pour faire les requ
 Sprint 10 : Compréhension des requetes delete avec volley. Pour le serveur REST, nous avons commencé à implémenter les styles, ainsi que leurs ajouts dans la BDD.
 
 Sprint 11 : L'application android arrive à supprimer des utilisateurs et l'affichage prend en compte le cas du serveur sans utilisateur. Nous avons finis d'impémenter les styles dans le serveur REST et la BDD.
+
+Sprint 12 : Ajout d'un bouton de confirmation avant la suppression sur android.
+
+Sprint 13 : Ajout d'une page permettant de voir les profils de l'utilisateur sur android.
