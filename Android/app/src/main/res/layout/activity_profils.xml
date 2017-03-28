@@ -30,7 +30,7 @@
         android:layout_centerHorizontal="true" />
 
     <TextView
-        android:text="Propriétaire :"
+        android:text="Description :"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView3"
@@ -60,7 +60,7 @@
         android:text="-"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/TVPropProf"
+        android:id="@+id/TVDescr"
         android:layout_alignBaseline="@+id/textView4"
         android:layout_alignBottom="@+id/textView4"
         android:layout_alignParentRight="true"

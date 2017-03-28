@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -59,6 +60,7 @@ public class GetUsers {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, error.toString(), Toast.LENGTH_LONG).show();
                 error.printStackTrace();
                 if(error.getMessage()!=null)
                     Log.v("getUsers ERROR",error.getMessage());
@@ -78,6 +80,7 @@ public class GetUsers {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, error.toString(), Toast.LENGTH_LONG).show();
                 error.printStackTrace();
                 if(error.getMessage()!=null)
                     Log.v("delUsers ERROR",error.getMessage());
@@ -113,6 +116,7 @@ public class GetUsers {
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                Toast.makeText(context, error.toString(), Toast.LENGTH_LONG).show();
                 error.printStackTrace();
                 if(error.getMessage()!=null)
                     Log.v("getProfilsUser ERROR",error.getMessage());

@@ -11,6 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -71,9 +72,12 @@ public class MainActivity extends AppCompatActivity {
         orderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, Profils.class);
-                intent.putExtra("json",jsonProf.toString());
-                startActivity(intent);
+               if(jsonA!=null && jsonA.length()>0 && jsonProf!=null && jsonProf.length()>0) {
+                   Intent intent = new Intent(MainActivity.this, Profils.class);
+                   intent.putExtra("json", jsonProf.toString());
+                   startActivity(intent);
+               }else
+                   Toast.makeText(getApplicationContext(), "Pas de profils à afficher", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -81,18 +85,22 @@ public class MainActivity extends AppCompatActivity {
         getter.getUsers(getter,this);
     }
 
-    public void doDelUser(View view){
-        PopUpButton pop=new PopUpButton();
+    public void doDelUser(View view) {
+        if (jsonA != null && jsonA.length() > 0) {
 
-        JSONObject jsonOb=null;
-        try {
-            jsonOb=(JSONObject)this.jsonA.get(spUsers.getSelectedItemPosition());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+            PopUpButton pop = new PopUpButton();
 
-        pop.set(getter,jsonOb, this);
-        pop.show(getFragmentManager(),"del user");
+            JSONObject jsonOb = null;
+            try {
+                jsonOb = (JSONObject) this.jsonA.get(spUsers.getSelectedItemPosition());
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+            pop.set(getter, jsonOb, this);
+            pop.show(getFragmentManager(), "del user");
+        }else
+            Toast.makeText(getApplicationContext(), "Pas d'utilisateur à supprimer", Toast.LENGTH_LONG).show();
     }
 
     public void setUI(JSONArray jsonProfilsUser, boolean general){

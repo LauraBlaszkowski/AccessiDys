@@ -19,8 +19,6 @@ import java.util.ArrayList;
 public class Profils extends AppCompatActivity {
     private JSONArray jsonProf;
     private Spinner spProfs;
-    private TextView TVNomProf;
-    private TextView TVPropProf;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,8 +33,6 @@ public class Profils extends AppCompatActivity {
         setContentView(R.layout.activity_profils);
 
         spProfs= (Spinner) findViewById(R.id.spProfs);
-        TVNomProf  = (TextView) findViewById(R.id.TVNomProf);
-        TVPropProf = (TextView) findViewById(R.id.TVPropProf);
 
         spProfs.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             @Override
@@ -84,22 +80,21 @@ public class Profils extends AppCompatActivity {
         }
 
         try {
-            TVNomProf.setText(jsonOb.get("name").toString());
+            ((TextView) findViewById(R.id.TVNomProf)).setText(jsonOb.get("name").toString());
         } catch (JSONException e) {
-            TVNomProf.setText("-");
+            ((TextView) findViewById(R.id.TVNomProf)).setText("-");
         }
 
         try {
-            TVPropProf.setText(jsonOb.get("proprio").toString());
+            ((TextView) findViewById(R.id.TVDescr)).setText(jsonOb.get("description").toString());
         } catch (JSONException e) {
-            TVPropProf.setText("-");
+            ((TextView) findViewById(R.id.TVDescr)).setText("-");
         }
         Log.v("Prof", jsonOb.toString());
     }
 
     private void affichageUserVide(){
-        TVNomProf.setText("-");
-        TVPropProf.setText("-");
+        ((TextView) findViewById(R.id.TVNomProf)).setText("-");
+        ((TextView) findViewById(R.id.TVDescr)).setText("-");
     }
-
 }
