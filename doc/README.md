@@ -1,0 +1,26 @@
+# Rétrospective de sprint
+
+Nom du scrum master du sprint : Adrien
+
+## Ce que nous avons fait durant ce sprint
+Nous avons essayé de mettre en place l'environnement mais nous avons eu des soucis d'installation pour mongo et node à cause du quota. Nous avons fait activer le son par les admins pour pouvoir tester plus tard la synthèse vocale. 
+
+## Ce que nous allons faire durant le prochain sprint
+Installer l'environnement de travail pour AccessiDys
+
+## PDCA 
+### Qu'avons nous testé durant ce sprint ? 
+
+### Qu'avons nous observé ? 
+
+### Quelle décision prenons nous suite à cette expérience ? 
+Nous allons essayer d'utiliser docker afin de ne plus avoir de problème de quota
+
+### Qu'allons nous tester durant les 2 prochaines heures ? 
+
+
+### À quoi verra-t-on que celà à fonctionné ?
+Le site AccessiDys sera accessible en local et nous pourrons modifier le code
+
+# Mémo
+N'oubliez pas d'ajouter une photo du radiateur d'information au moment de la rétrospective.
