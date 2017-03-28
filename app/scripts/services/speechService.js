@@ -64,8 +64,7 @@ cnedApp.service('speechService', function ($window) {
 
             var i = 0;
             var j = 0;
-
-
+            
             while (i < voicesAvailable.length) {
                 if (connected) {
                     var a = voicesAvailable[i].lang.substring(0, 2);
@@ -73,17 +72,16 @@ cnedApp.service('speechService', function ($window) {
                     var c = voicesAvailable[i].lang;
                     if (a === b) {
                         if (a === "fr") {
-                            if(navigator.language === "fr-CA"){
+                            if (navigator.language === "fr-CA") {
                                 return window.speechSynthesis.getVoices()[i];
                             }
-                            while ( j  < voicesAvailable.length) {
+                            while (j < voicesAvailable.length) {
                                 if ($window.speechSynthesis.getVoices()[j].lang === "fr-FR") {
                                     return window.speechSynthesis.getVoices()[j];
                                 }
                                 j++;
                             }
                         }
-
                         return voicesAvailable[i];
                     } else {
                         i++;

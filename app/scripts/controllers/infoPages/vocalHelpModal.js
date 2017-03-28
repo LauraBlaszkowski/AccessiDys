@@ -31,7 +31,7 @@ angular.module('cnedApp').controller('VocalHelpModalCtrl', function ($scope, $ui
     };
 
     $localForage.getItem('vocalHelpShowed').then(function (result) {
-        if (result)  {
+        if (result) {
             $scope.checkbox.checked = result;
         }
         console.log('result = ' + result);
@@ -46,6 +46,15 @@ angular.module('cnedApp').controller('VocalHelpModalCtrl', function ($scope, $ui
 
     $scope.closeModal = function () {
         $uibModalInstance.close();
+    };
+
+    
+    $scope.listeVoices = function () {
+        var en = window.speechSynthesis.getVoices()[0].lang;
+        //console.log(en);
+        var fr = window.speechSynthesis.getVoices()[37].lang;
+        //console.log(fr);
+        document.getElementById("liste").innerHTML += '<option>' + fr + '</option>' + '<option>' + en + '</option>';
     };
 
 });
