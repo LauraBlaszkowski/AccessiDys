@@ -35,3 +35,5 @@ On s'informe sur Angular JS pour pouvoir modifier les views.
 Sprint 12 : Ajout d'un bouton de confirmation avant la suppression sur android.
 
 Sprint 13 : Ajout d'une page permettant de voir les profils de l'utilisateur sur android. Ajout d'une liste sur le site pour choisir la langue de la voix.
+
+Sprint 14 : Correction des bugs de l'application android. Restriction sur l'affichage des profils s'il n'y en a pas.
